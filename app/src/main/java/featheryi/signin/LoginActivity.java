@@ -10,6 +10,15 @@ import android.widget.Button;
 import android.widget.EditText;
 import android.widget.Toast;
 
+import com.facebook.AccessToken;
+import com.facebook.CallbackManager;
+import com.facebook.FacebookCallback;
+import com.facebook.FacebookException;
+import com.facebook.FacebookSdk;
+import com.facebook.appevents.AppEventsLogger;
+import com.facebook.login.LoginManager;
+import com.facebook.login.LoginResult;
+import com.facebook.login.widget.LoginButton;
 import com.firebase.ui.auth.AuthUI;
 import com.firebase.ui.auth.IdpResponse;
 import com.google.android.gms.tasks.OnCompleteListener;
@@ -21,12 +30,18 @@ import com.google.firebase.auth.FirebaseUser;
 import java.util.Arrays;
 import java.util.List;
 
+/*
+*  沒有 google的狀態下會掛掉
+*/
+
 public class LoginActivity extends AppCompatActivity implements View.OnClickListener {
 
     String TAG = "LoginActivity";
     private FirebaseAuth mAuth;
+    CallbackManager callbackManager;
 
     com.google.android.gms.common.SignInButton google;
+    LoginButton facebook;
     Button login, create;
     EditText ed_email, ed_password;
 
@@ -35,18 +50,25 @@ public class LoginActivity extends AppCompatActivity implements View.OnClickList
 
     List<AuthUI.IdpConfig> providers = Arrays.asList(
             new AuthUI.IdpConfig.Builder(AuthUI.EMAIL_PROVIDER).build(),
+            new AuthUI.IdpConfig.Builder(AuthUI.FACEBOOK_PROVIDER).build(),
             new AuthUI.IdpConfig.Builder(AuthUI.GOOGLE_PROVIDER).build());
-
 //            new AuthUI.IdpConfig.Builder(AuthUI.PHONE_VERIFICATION_PROVIDER).build(),
-//            new AuthUI.IdpConfig.Builder(AuthUI.FACEBOOK_PROVIDER).build(),
 //            new AuthUI.IdpConfig.Builder(AuthUI.TWITTER_PROVIDER).build());
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_login);
+
         mAuth = FirebaseAuth.getInstance();
 
+        FacebookSdk.sdkInitialize(getApplicationContext());
+        AppEventsLogger.activateApp(this);
+//        購買 （使用 ISO 4217 貨幣代碼指定幣別）
+//        一筆 $4.32 美元的購買可使用下列程式碼記錄
+//      logger.logPurchase(BigDecimal.valueOf(4.32), Currency.getInstance("USD"));
+
+        callbackManager = CallbackManager.Factory.create();
         init();
     }
 
@@ -84,8 +106,7 @@ public class LoginActivity extends AppCompatActivity implements View.OnClickList
                                     if (task.isSuccessful()) {
                                         // Sign in success, update UI with the signed-in user's information
                                         Log.d(TAG, "signInWithEmail:success");
-                                        Intent login = new Intent(LoginActivity.this, MainActivity.class);
-                                        startActivity(login);
+                                        toMain(getResources().getString(R.string.google_login));
                                     } else {
                                         // If sign in fails, display a message to the user.
                                         Log.w(TAG, "signInWithEmail:failure", task.getException());
@@ -105,6 +126,7 @@ public class LoginActivity extends AppCompatActivity implements View.OnClickList
 
     @Override
     protected void onActivityResult(int requestCode, int resultCode, Intent data) {
+        callbackManager.onActivityResult(requestCode, resultCode, data);
         super.onActivityResult(requestCode, resultCode, data);
 
         if (requestCode == RC_SIGN_IN) {
@@ -114,8 +136,7 @@ public class LoginActivity extends AppCompatActivity implements View.OnClickList
                 // Successfully signed in
 //                FirebaseUser user = FirebaseAuth.getInstance().getCurrentUser();
 
-                Intent login = new Intent(this, MainActivity.class);
-                startActivity(login);
+                toMain(getResources().getString(R.string.google_login));
 
             } else {
                 Toast.makeText(this, "Login Failed", Toast.LENGTH_LONG).show();
@@ -146,12 +167,48 @@ public class LoginActivity extends AppCompatActivity implements View.OnClickList
 
         google = (com.google.android.gms.common.SignInButton) findViewById(R.id.btn_google);
         google.setOnClickListener(this);
+
+
+        facebook = (LoginButton) findViewById(R.id.btn_facebook);
+        facebook.setReadPermissions("email");
+//        // If using in a fragment
+//        facebook.setFragment(this);
+
+        // Callback registration
+        facebook.registerCallback(callbackManager, new FacebookCallback<LoginResult>() {
+            @Override
+            public void onSuccess(LoginResult loginResult) {
+                AccessToken accessToken = AccessToken.getCurrentAccessToken();
+                boolean isLoggedIn = accessToken == null;
+                boolean isExpired = accessToken.isExpired();
+
+                Log.i(TAG, "accessToken = " + accessToken);
+                Log.i(TAG, "isLoggedIn = " + isLoggedIn);
+                Log.i(TAG, "isExpired = " + isExpired);
+
+//                LoginManager.getInstance().logInWithReadPermissions(LoginActivity.this, Arrays.asList("public_profile"));
+                toMain(getResources().getString(R.string.fb_login));
+            }
+
+            @Override
+            public void onCancel() {
+            }
+
+            @Override
+            public void onError(FacebookException exception) {
+            }
+        });
+    }
+
+    public void toMain(String login_pass) {
+        Intent login = new Intent(LoginActivity.this, MainActivity.class);
+        login.putExtra("login_pass", login_pass);
+        startActivity(login);
     }
 
     public void updateUI(FirebaseUser user) {
         if (user != null) {
-            Intent login = new Intent(LoginActivity.this, MainActivity.class);
-            startActivity(login);
+            toMain(getResources().getString(R.string.google_login));
         }
     }
 
@@ -161,6 +218,12 @@ public class LoginActivity extends AppCompatActivity implements View.OnClickList
 
         FirebaseUser currentUser = mAuth.getCurrentUser();
         updateUI(currentUser);
+
+        AccessToken accessToken = AccessToken.getCurrentAccessToken();
+        boolean isLoggedIn = accessToken == null;
+//        if (isLoggedIn) {
+//            toMain(getResources().getString(R.string.fb_login));
+//        }
     }
 
     @Override

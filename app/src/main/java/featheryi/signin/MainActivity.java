@@ -9,6 +9,10 @@ import android.view.View;
 import android.widget.Button;
 import android.widget.TextView;
 
+import com.facebook.AccessToken;
+import com.facebook.CallbackManager;
+import com.facebook.FacebookSdk;
+import com.facebook.appevents.AppEventsLogger;
 import com.firebase.ui.auth.AuthUI;
 import com.google.android.gms.tasks.OnCompleteListener;
 import com.google.android.gms.tasks.Task;
@@ -19,6 +23,7 @@ public class MainActivity extends AppCompatActivity implements View.OnClickListe
 
     String TAG = "MainActivity";
     private FirebaseAuth mAuth;
+    CallbackManager callbackManager;
 
     TextView text;
     Button logout, delete;
@@ -27,7 +32,10 @@ public class MainActivity extends AppCompatActivity implements View.OnClickListe
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_main);
+
         mAuth = FirebaseAuth.getInstance();
+        AccessToken accessToken = AccessToken.getCurrentAccessToken();
+        text.setText(accessToken.toString());
         init();
         getUser();
     }
@@ -93,6 +101,13 @@ public class MainActivity extends AppCompatActivity implements View.OnClickListe
                         });
                 break;
         }
+    }
+
+    @Override
+    public void onActivityResult(int requestCode, int resultCode, Intent data) {
+        super.onActivityResult(requestCode, resultCode, data);
+
+        callbackManager.onActivityResult(requestCode, resultCode, data);
     }
 
     @Override

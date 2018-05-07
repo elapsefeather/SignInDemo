@@ -8,58 +8,78 @@
 
     <LinearLayout
         android:layout_width="match_parent"
-        android:layout_height="match_parent"
-        android:layout_margin="@dimen/page_marign"
-        android:gravity="center_horizontal"
-        android:orientation="vertical">
+        android:layout_height="match_parent">
 
-        <android.support.design.widget.TextInputLayout
+        <ScrollView
             android:layout_width="match_parent"
-            android:layout_height="wrap_content"
-            android:layout_above="@+id/input_password"
-            android:layout_margin="@dimen/line_margin">
+            android:layout_height="match_parent">
 
-            <EditText
-                android:id="@+id/ed_email"
+            <LinearLayout
                 android:layout_width="match_parent"
-                android:layout_height="wrap_content"
-                android:hint="@string/account"
-                android:singleLine="true"
-                app:errorEnabled="true" />
-        </android.support.design.widget.TextInputLayout>
+                android:layout_height="match_parent"
+                android:layout_margin="@dimen/page_marign"
+                android:gravity="center_horizontal"
+                android:orientation="vertical">
 
-        <android.support.design.widget.TextInputLayout
-            android:layout_width="match_parent"
-            android:layout_height="wrap_content"
-            android:layout_above="@+id/input_password"
-            android:layout_margin="@dimen/line_margin">
+                <android.support.design.widget.TextInputLayout
+                    android:layout_width="match_parent"
+                    android:layout_height="wrap_content"
+                    android:layout_above="@+id/input_password"
+                    android:layout_margin="@dimen/line_margin">
 
-            <EditText
-                android:id="@+id/ed_password"
-                android:layout_width="match_parent"
-                android:layout_height="wrap_content"
-                android:hint="@string/password"
-                android:singleLine="true"
-                app:errorEnabled="true" />
-        </android.support.design.widget.TextInputLayout>
+                    <EditText
+                        android:id="@+id/ed_email"
+                        android:layout_width="match_parent"
+                        android:layout_height="wrap_content"
+                        android:focusable="false"
+                        android:hint="@string/account"
+                        android:singleLine="true"
+                        app:errorEnabled="true" />
+                </android.support.design.widget.TextInputLayout>
 
-        <Button
-            android:id="@+id/btn_login"
-            android:layout_width="match_parent"
-            android:layout_height="wrap_content"
-            android:text="@string/login" />
+                <android.support.design.widget.TextInputLayout
+                    android:layout_width="match_parent"
+                    android:layout_height="wrap_content"
+                    android:layout_above="@+id/input_password"
+                    android:layout_margin="@dimen/line_margin">
 
-        <com.google.android.gms.common.SignInButton
-            android:id="@+id/btn_google"
-            android:layout_width="match_parent"
-            android:layout_height="wrap_content"
-            android:layout_margin="@dimen/line_margin" />
+                    <EditText
+                        android:id="@+id/ed_password"
+                        android:layout_width="match_parent"
+                        android:layout_height="wrap_content"
+                        android:focusable="false"
+                        android:hint="@string/password"
+                        android:singleLine="true"
+                        app:errorEnabled="true" />
+                </android.support.design.widget.TextInputLayout>
 
-        <Button
-            android:id="@+id/btn_create"
-            android:layout_width="match_parent"
-            android:layout_height="wrap_content"
-            android:layout_margin="@dimen/line_margin"
-            android:text="@string/create" />
+                <Button
+                    android:id="@+id/btn_login"
+                    android:layout_width="match_parent"
+                    android:layout_height="wrap_content"
+                    android:text="@string/login" />
+
+                <Button
+                    android:id="@+id/btn_create"
+                    android:layout_width="match_parent"
+                    android:layout_height="wrap_content"
+                    android:layout_margin="@dimen/line_margin"
+                    android:text="@string/create" />
+
+                <com.google.android.gms.common.SignInButton
+                    android:id="@+id/btn_google"
+                    android:layout_width="match_parent"
+                    android:layout_height="wrap_content"
+                    android:layout_margin="@dimen/line_margin" />
+
+                <com.facebook.login.widget.LoginButton
+                    android:id="@+id/btn_facebook"
+                    android:layout_width="wrap_content"
+                    android:layout_height="wrap_content"
+                    android:layout_gravity="center_horizontal"
+                    android:layout_marginBottom="30dp"
+                    android:layout_marginTop="30dp" />
+            </LinearLayout>
+        </ScrollView>
     </LinearLayout>
 </android.support.constraint.ConstraintLayout>
