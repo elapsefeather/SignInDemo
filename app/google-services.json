@@ -1,0 +1,55 @@
+{
+  "project_info": {
+    "project_number": "64248385416",
+    "firebase_url": "https://signin-1b30f.firebaseio.com",
+    "project_id": "signin-1b30f",
+    "storage_bucket": "signin-1b30f.appspot.com"
+  },
+  "client": [
+    {
+      "client_info": {
+        "mobilesdk_app_id": "1:64248385416:android:a34ab31313f1ae6b",
+        "android_client_info": {
+          "package_name": "featheryi.signin"
+        }
+      },
+      "oauth_client": [
+        {
+          "client_id": "64248385416-3u6i6pj436gepvgl74du92u365ke88aa.apps.googleusercontent.com",
+          "client_type": 1,
+          "android_info": {
+            "package_name": "featheryi.signin",
+            "certificate_hash": "9e59f43157b7b015a5b4997238740a352b8c2957"
+          }
+        },
+        {
+          "client_id": "64248385416-psm960t2ek0frsd2ab6p04et4n9642mv.apps.googleusercontent.com",
+          "client_type": 3
+        }
+      ],
+      "api_key": [
+        {
+          "current_key": "AIzaSyDJ1qJe3gE_2x7InwRujwk9wYYz6dBa8cM"
+        }
+      ],
+      "services": {
+        "analytics_service": {
+          "status": 1
+        },
+        "appinvite_service": {
+          "status": 2,
+          "other_platform_oauth_client": [
+            {
+              "client_id": "64248385416-psm960t2ek0frsd2ab6p04et4n9642mv.apps.googleusercontent.com",
+              "client_type": 3
+            }
+          ]
+        },
+        "ads_service": {
+          "status": 2
+        }
+      }
+    }
+  ],
+  "configuration_version": "1"
+}

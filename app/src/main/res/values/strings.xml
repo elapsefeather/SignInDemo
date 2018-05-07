@@ -1,0 +1,24 @@
+<resources>
+    <string name="app_name">SignIn</string>
+
+    <!-- Facebook application ID and custom URL scheme (app ID prefixed by 'fb'). -->
+    <string name="facebook_application_id" translatable="false">YOUR_APP_ID</string>
+    <string name="facebook_login_protocol_scheme" translatable="false">fbYOUR_APP_ID</string>
+
+    <string name="login">登入</string>
+    <string name="logout">登出</string>
+    <string name="delete">刪除帳戶</string>
+    <string name="create">創建帳號</string>
+    <string name="createuser">帳號驗證</string>
+    <string name="account">帳號</string>
+    <string name="password">密碼</string>
+
+    <string name="create_email">請使用電子信箱</string>
+    <string name="create_password">請設置6-20位數密碼</string>
+    <string name="create_password2">請再輸入密碼</string>
+
+    <string name="email_null">請輸入電子信箱</string>
+    <string name="password_null">請輸入密碼</string>
+    <string name="password_different">請輸入相同密碼</string>
+    <string name="password_errorsize">請輸入6位數密碼</string>
+</resources>
