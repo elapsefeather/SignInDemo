@@ -79,6 +79,7 @@ public class CreateUserActivity extends AppCompatActivity implements View.OnClic
                                         FirebaseUser user = mAuth.getCurrentUser();
 
                                         Intent login = new Intent(CreateUserActivity.this, MainActivity.class);
+                                        login.putExtra("login_pass",getResources().getString(R.string.google_login));
                                         startActivity(login);
                                     } else {
                                         // If sign in fails, display a message to the user.

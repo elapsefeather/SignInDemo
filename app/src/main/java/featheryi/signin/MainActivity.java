@@ -5,14 +5,23 @@ import android.net.Uri;
 import android.support.annotation.NonNull;
 import android.support.v7.app.AppCompatActivity;
 import android.os.Bundle;
+import android.util.Log;
 import android.view.View;
 import android.widget.Button;
 import android.widget.TextView;
 
 import com.facebook.AccessToken;
 import com.facebook.CallbackManager;
+import com.facebook.FacebookCallback;
+import com.facebook.FacebookException;
 import com.facebook.FacebookSdk;
+import com.facebook.GraphRequest;
+import com.facebook.GraphResponse;
+import com.facebook.HttpMethod;
 import com.facebook.appevents.AppEventsLogger;
+import com.facebook.login.LoginManager;
+import com.facebook.login.LoginResult;
+import com.facebook.login.widget.LoginButton;
 import com.firebase.ui.auth.AuthUI;
 import com.google.android.gms.tasks.OnCompleteListener;
 import com.google.android.gms.tasks.Task;
@@ -25,29 +34,52 @@ public class MainActivity extends AppCompatActivity implements View.OnClickListe
     private FirebaseAuth mAuth;
     CallbackManager callbackManager;
 
+    LoginButton facebook;
     TextView text;
     Button logout, delete;
+    String login_pass = "", google_login = "", facebook_login = "";
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_main);
 
+        login_pass = getIntent().getExtras().getString("login_pass");
+
         mAuth = FirebaseAuth.getInstance();
-        AccessToken accessToken = AccessToken.getCurrentAccessToken();
-        text.setText(accessToken.toString());
+
+        callbackManager = CallbackManager.Factory.create();
+
         init();
         getUser();
     }
 
     public void init() {
+        google_login = getResources().getString(R.string.google_login);
+        facebook_login = getResources().getString(R.string.fb_login);
+
         text = (TextView) findViewById(R.id.text);
 
         logout = (Button) findViewById(R.id.btn_logout);
-        logout.setOnClickListener(this);
-
         delete = (Button) findViewById(R.id.btn_delete);
-        delete.setOnClickListener(this);
+        facebook = (LoginButton) findViewById(R.id.main_btn_facebook);
+
+        if (login_pass.equals(google_login)) {
+
+            logout.setOnClickListener(this);
+            delete.setOnClickListener(this);
+
+            logout.setVisibility(View.VISIBLE);
+            delete.setVisibility(View.VISIBLE);
+            facebook.setVisibility(View.GONE);
+        } else if (login_pass.equals(facebook_login)) {
+
+            facebook.setOnClickListener(this);
+
+            logout.setVisibility(View.GONE);
+            delete.setVisibility(View.GONE);
+            facebook.setVisibility(View.VISIBLE);
+        }
     }
 
     public void getUser() {
@@ -73,6 +105,23 @@ public class MainActivity extends AppCompatActivity implements View.OnClickListe
         }
     }
 
+    public void disconnectFromFacebook() {
+
+        if (AccessToken.getCurrentAccessToken() == null) {
+            return; // already logged out
+        }
+
+        new GraphRequest(AccessToken.getCurrentAccessToken(), "/me/permissions/", null, HttpMethod.DELETE, new GraphRequest
+                .Callback() {
+            @Override
+            public void onCompleted(GraphResponse graphResponse) {
+
+                LoginManager.getInstance().logOut();
+
+            }
+        }).executeAsync();
+    }
+
     @Override
     public void onClick(View v) {
         int id = v.getId();
@@ -82,9 +131,7 @@ public class MainActivity extends AppCompatActivity implements View.OnClickListe
                         .signOut(this)
                         .addOnCompleteListener(new OnCompleteListener<Void>() {
                             public void onComplete(@NonNull Task<Void> task) {
-
-                                Intent logout = new Intent(MainActivity.this, LoginActivity.class);
-                                startActivity(logout);
+                                toLogin();
                             }
                         });
                 break;
@@ -95,19 +142,26 @@ public class MainActivity extends AppCompatActivity implements View.OnClickListe
                         .addOnCompleteListener(new OnCompleteListener<Void>() {
                             @Override
                             public void onComplete(@NonNull Task<Void> task) {
-                                Intent logout = new Intent(MainActivity.this, LoginActivity.class);
-                                startActivity(logout);
+                                toLogin();
                             }
                         });
+                break;
+            case R.id.main_btn_facebook:
+                LoginManager.getInstance().logOut();
+                toLogin();
                 break;
         }
     }
 
     @Override
     public void onActivityResult(int requestCode, int resultCode, Intent data) {
-        super.onActivityResult(requestCode, resultCode, data);
-
         callbackManager.onActivityResult(requestCode, resultCode, data);
+        super.onActivityResult(requestCode, resultCode, data);
+    }
+
+    public void toLogin() {
+        Intent logout = new Intent(MainActivity.this, LoginActivity.class);
+        startActivity(logout);
     }
 
     @Override

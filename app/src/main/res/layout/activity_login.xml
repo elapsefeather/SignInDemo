@@ -8,7 +8,9 @@
 
     <LinearLayout
         android:layout_width="match_parent"
-        android:layout_height="match_parent">
+        android:layout_height="match_parent"
+        android:focusable="true"
+        android:focusableInTouchMode="true">
 
         <ScrollView
             android:layout_width="match_parent"
@@ -31,7 +33,6 @@
                         android:id="@+id/ed_email"
                         android:layout_width="match_parent"
                         android:layout_height="wrap_content"
-                        android:focusable="false"
                         android:hint="@string/account"
                         android:singleLine="true"
                         app:errorEnabled="true" />
@@ -47,7 +48,6 @@
                         android:id="@+id/ed_password"
                         android:layout_width="match_parent"
                         android:layout_height="wrap_content"
-                        android:focusable="false"
                         android:hint="@string/password"
                         android:singleLine="true"
                         app:errorEnabled="true" />
